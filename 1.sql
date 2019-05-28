@@ -1,6 +1,6 @@
 -- 建库
 create database student;
-
+use student;
 -- user表
 
 create table user(

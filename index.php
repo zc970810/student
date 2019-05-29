@@ -4,7 +4,7 @@ require 'lib/pdo.class.php';
 require 'lib/tools.func.php';
 $data = getSession('user');
 
-$sql = "select id,face,name,info from user order by id desc";
+$sql = "select id,face,name,info,money from user order by id desc";
 $stmt = $pdo->query($sql);
 $user = $stmt->fetchAll(PDO::FETCH_ASSOC);
 if (!empty($_GET['key'])) {
@@ -41,7 +41,7 @@ if (!empty($_GET['key'])) {
             </div>
             <?php if (!empty($data)): ?>
             <div class="navbar-header" style="">
-                <a class="navbar-brand hidden-sm" href=""><?php echo $data['name']?>,欢迎您！</a>
+                <a class="navbar-brand hidden-sm" href="user.php"><?php echo $data['name']?>,欢迎您！</a>
             </div>
             <?php endif ?>
         </div>
@@ -59,7 +59,7 @@ if (!empty($_GET['key'])) {
                         <button class="btn btn-default" type="submit">搜索</button>
                         <?php if (empty($data)): ?>
                             <a href="register.php?register=enroll"><button type="button" class="btn btn-primary btn-default" data-toggle="modal">  注册  </button></a>
-                            <a href="register.php?register=login"><button type="button" class="btn btn-primary btn-default" data-toggle="modal">  登录  </button></                  
+                            <a href="register.php?register=login"><button type="button" class="btn btn-primary btn-default" data-toggle="modal">  登录  </button></a>                  
                         <?php else: ?>
                              <a href="out.class.php"><button type="button" class="btn btn-primary btn-default" data-toggle="modal">  退出  </button></a>
                         <?php endif; ?>                       
@@ -82,7 +82,7 @@ if (!empty($_GET['key'])) {
                     <div class="modal-body">
                         <p>
                           收款人：
-                          <select class="form-control" name="payee_id">
+                          <select class="form-control" name="payee_id" id="transfer-person">
                             <?php foreach ($user as $key => $value): ?>
                                 <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
                             <?php endforeach ?>
@@ -109,12 +109,12 @@ if (!empty($_GET['key'])) {
         <!--信息展示-->
         <div class="row">
         <?php foreach ($user as $key => $value): ?>
-            <div class="col-lg-4">
+            <div class="col-lg-4"  <?php if(!empty($data)){ if ($value['id']==$data['id']) { echo "style='display: none'"; } } ?>>
                 <img class="img-circle" src="<?php echo $value['face']; ?>" alt="" width="140" height="140">
                 <h3><?php echo $value['name']; ?></h3>
-                <p><?php echo $value['info']; ?></p>
+                <p>当前金额：<?php echo $value['money']; ?></p>
                 <div class="button">
-                  <button type="button" class="btn btn-primary btn-default" data-toggle="modal" data-target="#myModal">  转账  </button>
+                  <button type="button" class="btn btn-primary btn-default" data-toggle="modal" data-target="#myModal" data-user="<?php echo $value['id']?>">  转账  </button>
                 </div>
             </div>
         <?php endforeach ?>
@@ -129,6 +129,17 @@ if (!empty($_GET['key'])) {
     </footer>
     <script src="style/js/jquery.min.js"></script>
     <script src="style/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $("#exampleModal").modal("hide");
+        $('#myModal').on('show.bs.modal',function(event){
+            var a = $(event.relatedTarget)
+            var userName = a.context.dataset.user;
+            var modal = $(this);
+            $("#transfer-person").each(function(){
+                $('#transfer-person').val(userName);
+            });
+        })
+    </script>
 </body>
 
 </html>

@@ -1,7 +1,8 @@
 <?php 
 require 'lib/pdo.class.php';
 require 'lib/file.func.php';
-require 'lib/tools.func.php';
+// require 'lib/tools.func.php';
+require 'lib/lib.php';
 
 $name = $_POST['name'];
 $number = intval($_POST['number']);
@@ -16,22 +17,15 @@ if ($enroll=="enroll") {
 
 
 
-	if (mb_strlen($name)>10) {
-		setInfo('姓名不可以超过10位');
-		header("location:register.php");
-		die;
-	}
 
-	if (mb_strlen($number)>8) {
-		setInfo('学号不可以超过8位');
-		header("location:register.php");
-		die;
-	}
-	if (mb_strlen($info)>50) {
-		setInfo('个人简介不可以超过50个字');
-		header("location:register.php");
-		die;
-	}
+	// $judge = new Judge();
+
+	// if (!$judge -> JudgeName($name) || !$judge -> JudgeNumber($number) || !$judge -> JudgeInfo($info)) {
+	// 	header("location:register.php?register=enroll");
+	// 	die;
+	// }
+
+
 
 	$sql = "insert into user(name,number,email,money,face,info) value('$name',$number,'$email',$money,'$face','$info')";
 	$stmt = $pdo->exec($sql);
@@ -39,6 +33,7 @@ if ($enroll=="enroll") {
 	if ($stmt>0) {
 		// setInfo('注册成功');
 		login($name,$number);
+		header("location:index.php");
 		die;
 	}else{
 		setInfo('学号重复');
@@ -54,27 +49,5 @@ if ($enroll=="enroll") {
 
 
 
-function login($name,$number)
-{
-	$pdo = new PDO("mysql:host=localhost;dbname=student","root","root");
-	$sql = "select id,name,number from user where name='$name' and number=$number";
-	$stmt = $pdo->query($sql);
-	$id = $stmt->fetch(PDO::FETCH_ASSOC)['id'];
-	if ($id>0) {
-		// setInfo('登录成功');
-		$data = [
-			'id' => $id,
-			'name' => $name,
-			'number' => $number
-		];
-		setSession('user',$data);
-		header("location:index.php");
-		die;
-	}else{
-		setInfo('姓名或学号错误');
-		header("location:register.php");
-		die;
-	}
-}
 
 

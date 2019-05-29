@@ -17,12 +17,12 @@ if (!empty($_POST['name'])) {
     $face = upload_file($faceinfo,'./uploads');
 
 
-  $judge = new Judge();
+  // $judge = new Judge();
 
-  if (!$judge -> JudgeName($name) || !$judge -> JudgeNumber($number) || !$judge -> JudgeInfo($info)) {
-    header("location:user.php");
-    die;
-  }
+  // if (!$judge -> JudgeName($name) || !$judge -> JudgeNumber($number) || !$judge -> JudgeInfo($info)) {
+  //   header("location:user.php");
+  //   die;
+  // }
 
 
     $id = getSession('user')['id'];
@@ -31,6 +31,7 @@ if (!empty($_POST['name'])) {
     // var_dump($sql);die;
     if ($stmt>0) {
 
+      // 在file.func.php中引入的
       del_file($user['face']);
       
       login($name,$number);

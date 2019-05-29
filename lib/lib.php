@@ -25,12 +25,12 @@ function login($name,$number)
 			'number' => $number
 		];
 		setSession('user',$data);
-		// header("location:index.php");
-		// die;
+		header("location:index.php");
+		die;
 	}else{
 		setInfo('姓名或学号错误');
-		// header("location:register.php");
-		// die;
+		header("location:register.php");
+		die;
 	}
 }
 
